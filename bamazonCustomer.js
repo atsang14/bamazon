@@ -20,7 +20,7 @@ connection.connect();
 
 // this runs the first query of prompting the user with all the avaialabel products
 // After the query is run, we run teh slectPrompt function
-connection.query('SELECT item_id, product_name, department_name, price stock_quantity '+
+connection.query('SELECT item_id, product_name, department_name, price, stock_quantity '+
 	'FROM products', function(err,res) {
 		if(err) throw err;
 		console.log('----------- Current Items -----------')
@@ -47,7 +47,7 @@ function selectPrompt() {
 		}
 		]).then(function(inquirerResponse) {
 			var id_product = inquirerResponse.idProduct;
-			var purchase_amount = inquirerResponse.purchaseAmount;
+			var purchase_amount = parseInt(inquirerResponse.purchaseAmount);
 			checkStock(id_product, purchase_amount);
 			
 		})
@@ -57,7 +57,8 @@ function selectPrompt() {
 // the checkStock function check if your store 
 // has enough of the product to meet the customer's request.
 function checkStock(productId, purchaseAmount) {
-	connection.query('SELECT stock_quantity, product_name FROM products WHERE item_id = '
+
+	connection.query('SELECT stock_quantity, product_name, price FROM products WHERE item_id = '
 	 + productId
 	 ,function(err, res) {
 
@@ -65,6 +66,7 @@ function checkStock(productId, purchaseAmount) {
 
 	 	var stockQuantity = res[0].stock_quantity;
 	 	var productName   = res[0].product_name;
+	 	var price 		  = res[0].price;
 
 	 	if(productId == '') {
 	 		
@@ -78,27 +80,44 @@ function checkStock(productId, purchaseAmount) {
 	 			console.log('Unfortunately we only posses ' + stockQuantity
 	 				+ ' amount of '+productName+'.')
 
-	 		} else if (stockQuantity = 0) {
+	 		} else if (stockQuantity == 0) {
 
 	 			console.log('We do not have anymore of that product. Sorry!' + 
 	 				' Check with us soon!');
 
-	 		} else if (stockQuantity > purchaseAmount) {
+	 		} else if (stockQuantity >= purchaseAmount) {
 
-	 			console.log(purchaseAmount);
+	 			var newQuantity = stockQuantity - purchaseAmount;
+	 			var total 		= purchaseAmount * price;
 
-	 		}
+	 			console.log('================');
+	 			updateQuantity(productId, newQuantity);
+	 			console.log('================');
+	 			console.log('Thank you for your purchase!');
+	 			console.log('Your total will be $' + total);
 
-	 	} else {
+	 		} 
+	 		
+	 	} 
+	 	else {
 	 		
 	 		console.log('something went wrong');
 
 	 	}
-	 	connection.end();
 	 })
 }
 
+function updateQuantity(rowId, newQuantity) {
+	
+	console.log('================');
+	connection.query('UPDATE products SET stock_quantity = '
+		+newQuantity+' WHERE item_id ='+rowId
+		,function(err,res) {
+			if(err) throw err;
+			connection.end();
+		})
 
+}
 
 
 
