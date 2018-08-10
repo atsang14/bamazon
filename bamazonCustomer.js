@@ -16,7 +16,6 @@ var connection = mysql.createConnection({
 });
  
 connection.connect();
-	// ids, names, and prices of products for sale.
 
 // this runs the first query of prompting the user with all the avaialabel products
 // After the query is run, we run teh slectPrompt function
@@ -27,9 +26,6 @@ connection.query('SELECT item_id, product_name, department_name, price, stock_qu
 		console.log(res);
 		selectPrompt();
 });
-
-// Once the customer has placed the order, your application 
-// should check if your store has enough of the product to meet the customer's request.
 
 // The selectPrompt function prompts the user to
 // enter an item id and the nhow many units of product they want
@@ -107,6 +103,10 @@ function checkStock(productId, purchaseAmount) {
 	 })
 }
 
+// this function takes in 2 arguements.
+// the first argument gets the specific item id in order to 
+// target the correct row.
+// the second argument takes in the price to update.
 function updateQuantity(rowId, newQuantity) {
 	
 	console.log('================');
