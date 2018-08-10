@@ -89,7 +89,7 @@ function checkStock(productId, purchaseAmount) {
 	 		} 
 	 	} 
 	 	else {
-	 		console.log('something went wrong');
+	 		console.log('Something went wrong');
 
 	 	}
 	 })
@@ -102,10 +102,10 @@ function checkStock(productId, purchaseAmount) {
 // the 3rd argument used to see if we should still be connected after 
 // calling this function.
 function updateProductSales(setVariable, whereVariable, connect) {
-	console.log('Line 125 is happening');
 	connection.query('UPDATE products SET ' + setVariable + ' WHERE ' + whereVariable
 		,function(err,res) {
 			if(err) throw err;
+			console.log('Update complete!')
 			if(connect)connection.end();
 		}
 	)
