@@ -15,15 +15,6 @@ var connection = mysql.createConnection({
   database: "bamazon"
 });
 
-
-    // * View Products for Sale
-    
-    // * View Low Inventory
-    
-    // * Add to Inventory
-    
-    // * Add New Product
-
 inquirer.prompt([
 	{
 		type: 'list',
@@ -51,7 +42,7 @@ function runOption(userResponse) {
 		addToInventory();
 
 	}else if (userResponse == 'Add New Product') {
-		console.log('hi');
+		addNewProduct();
 	}
 }
 
@@ -177,6 +168,50 @@ function updateProduct(itemId,amount) {
 
 function addNewProduct() {
 
+	inquirer.prompt([
+		{
+			type: 'input',
+			message: 'Enter the Item Id',
+			name: 'item_id'
+		},
+		{
+			type: 'input',
+			message: 'Enter the Product Name',
+			name: 'product_name'
+		},
+		{
+			type: 'input',
+			message: 'Enter the Department Name',
+			name: 'department_name'
+		},
+		{
+			type: 'input',
+			message: 'Enter the Price',
+			name: 'item_price'
+		},
+		{
+			type: 'input',
+			message: 'Enter the Amount that will be in stock',
+			name: 'stock_quantity'
+		}
+		]).then(function(inquireResponse) {
+			var id 			= parseInt(inquireResponse.item_id);
+			var name 		= inquireResponse.product_name;
+			var department 	= inquireResponse.department_name;
+			var price 		= parseFloat(inquireResponse.item_price);
+			var quantity 	= parseInt(inquireResponse.stock_quantity);
+			var query 		= 'INSERT INTO products (item_id, product_name, department_name,'+
+				' price, stock_quantity) VALUES (' + id + ' , "' + name + '", "' + department
+				+ '", ' + price + ', ' + quantity + ')';
+
+			connection.query(query, function(err, res) {
+
+					if(err) throw err;
+					console.log(res);
+					console.log('Item Inserted!');	
+					connection.end();	
+				})
+		})
 }	
 
 
