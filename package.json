@@ -19,6 +19,7 @@
   "homepage": "https://github.com/atsang14/bamazon#readme",
   "dependencies": {
     "inquirer": "^6.1.0",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "tty-table": "^2.6.8"
   }
 }
